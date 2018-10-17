@@ -13,7 +13,7 @@
 #set -x
 #set -e
 
-TG_DEV_MASTER_IP=$1
+TG_DEV_MASTER_IP="$1"
 MYSQL_DRIVER_LOCATION='http://central.maven.org/maven2/mysql/mysql-connector-java/6.0.6/mysql-connector-java-6.0.6.jar'
 
 MASTER_KEY_LOCATION='/testgrid/testgrid-prod-key.pem'

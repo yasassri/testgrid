@@ -9,8 +9,9 @@
 #              operational. This is triggered from the slave setup plugin.
 #
 #===================================================================================
-set -x
-set -e
+
+#set -x
+#set -e
 
 TG_DEV_MASTER_IP=$1
 MYSQL_DRIVER_LOCATION='http://central.maven.org/maven2/mysql/mysql-connector-java/6.0.6/mysql-connector-java-6.0.6.jar'

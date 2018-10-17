@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 #===================================================================================
 #
 # FILE: ec2-slave-setup.sh
@@ -6,13 +6,16 @@
 # USAGE: ec2-slave-setup.sh [Master_IP]
 #
 # DESCRIPTION: This script is used to setup the Jenkins slave instance to be
-# operational. This is triggered from the slave setup plugin.
+#              operational. This is triggered from the slave setup plugin.
 #
 #===================================================================================
+set -x
 set -e
 
-MYSQL_DRIVER_LOCATION='http://central.maven.org/maven2/mysql/mysql-connector-java/6.0.6/mysql-connector-java-6.0.6.jar'
 TG_DEV_MASTER_IP=$1
+MYSQL_DRIVER_LOCATION='http://central.maven.org/maven2/mysql/mysql-connector-java/6.0.6/mysql-connector-java-6.0.6.jar'
+
+MASTER_KEY_LOCATION='/testgrid/testgrid-prod-key.pem'
 # Create TG Home directory
 mkdir -p /testgrid/testgrid-home/testgrid-dist
 cd /testgrid/testgrid-home/testgrid-dist
@@ -23,14 +26,14 @@ rm -rf *
 # Downloading the TG distribution
 echo "Downloading the TG Distribution!"
 echo "Download Location ${TG_DEV_MASTER_IP}:/testgrid/testgrid-home/testgrid-dist/WSO2-TestGrid.zip"
-scp -i /testgrid/testgrid-prod-key.pem -o StrictHostKeyChecking=no ubuntu@${TG_DEV_MASTER_IP}:/testgrid/testgrid-home/testgrid-dist/WSO2-TestGrid.zip /testgrid/testgrid-home/testgrid-dist/
+scp -i ${MASTER_KEY_LOCATION} -o StrictHostKeyChecking=no ubuntu@${TG_DEV_MASTER_IP}:/testgrid/testgrid-home/testgrid-dist/WSO2-TestGrid.zip /testgrid/testgrid-home/testgrid-dist/
 echo "Copying config.properties from master!"
-scp -i /testgrid/testgrid-prod-key.pem -o StrictHostKeyChecking=no ubuntu@${TG_DEV_MASTER_IP}:/testgrid/testgrid-home/config.properties /testgrid/testgrid-home/
+scp -i ${MASTER_KEY_LOCATION} -o StrictHostKeyChecking=no ubuntu@${TG_DEV_MASTER_IP}:/testgrid/testgrid-home/config.properties /testgrid/testgrid-home/
 
 echo "Copying the testdrid server.jks"
-scp -i /testgrid/testgrid-prod-key.pem -o StrictHostKeyChecking=no ubuntu@${TG_DEV_MASTER_IP}:/testgrid/testgrid-home/server.jks /testgrid/testgrid-home/
+scp -i ${MASTER_KEY_LOCATION} -o StrictHostKeyChecking=no ubuntu@${TG_DEV_MASTER_IP}:/testgrid/testgrid-home/server.jks /testgrid/testgrid-home/
 
-echo "Unzip Tesgrid distribution"
+echo "Unzip Tesgrid distribution and copy mysql jar"
 unzip WSO2-TestGrid.zip
 curl -o ./WSO2-TestGrid/lib/mysql.jar ${MYSQL_DRIVER_LOCATION}
 

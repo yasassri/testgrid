@@ -35,6 +35,7 @@ public class TestgridYaml extends TestPlan {
     private static final long serialVersionUID = -5625001967682926221L;
 
     private String version;
+    private String emailToList;
 
     public String getVersion() {
         return version;
@@ -42,5 +43,14 @@ public class TestgridYaml extends TestPlan {
 
     public void setVersion(String version) {
         this.version = version;
+    }
+
+
+    public String getEmailToList() {
+        return emailToList;
+    }
+
+    public void setEmailToList(String emailToList) {
+        this.emailToList = emailToList;
     }
 }

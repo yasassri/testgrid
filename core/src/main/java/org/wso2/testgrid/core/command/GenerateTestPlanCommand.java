@@ -219,7 +219,6 @@ public class GenerateTestPlanCommand implements Command {
 
             String fileName = String
                     .format("%s-%02d%s", TestGridConstants.TEST_PLAN_YAML_PREFIX, (i + 1), FileUtil.YAML_EXTENSION);
-            testPlan.setKeyFileLocation(jobConfigFile.getKeyFileLocation());
             testPlan.setJobProperties(jobConfigFile.getProperties());
             String output = yaml.dump(testPlan);
 
@@ -296,43 +295,8 @@ public class GenerateTestPlanCommand implements Command {
      * @return the built testgrid.yaml bean
      */
     private TestgridYaml buildTestgridYamlContent(JobConfigFile jobConfigFile) {
-        //Need to make absolute paths from here
-        String infraRepositoryLocation = resolvePath(jobConfigFile.getInfrastructureRepository(), jobConfigFile);
-        String deployRepositoryLocation = resolvePath(jobConfigFile.getDeploymentRepository(), jobConfigFile);
-        String scenarioTestsRepositoryLocation = resolvePath(jobConfigFile.getScenarioTestsRepository(), jobConfigFile);
-        String configChangeSetRepositoryLocation = jobConfigFile.getConfigChangeSetRepository();
-        String configChangeSetBranchName = jobConfigFile.getConfigChangeSetBranchName();
 
-        StringBuilder testgridYamlBuilder = new StringBuilder();
-        String ls = System.lineSeparator();
-        testgridYamlBuilder
-                .append(getTestgridYamlFor(getTestGridYamlLocation(infraRepositoryLocation)))
-                .append(ls);
-        String testgridYamlContent = testgridYamlBuilder.toString().trim();
-        if (!testgridYamlContent.isEmpty()) {
-            if (!testgridYamlContent.contains("deploymentConfig")) {
-                testgridYamlBuilder
-                        .append(getTestgridYamlFor(getTestGridYamlLocation(deployRepositoryLocation)))
-                        .append(ls);
-            }
-            testgridYamlBuilder
-                    .append(getTestgridYamlFor(getTestGridYamlLocation(scenarioTestsRepositoryLocation)))
-                    .append(ls);
-            testgridYamlBuilder
-                    .append(getTestgridYamlFor(getTestGridYamlLocation(configChangeSetRepositoryLocation)))
-                    .append(ls);
-            testgridYamlBuilder
-                    .append(getTestgridYamlFor(getTestGridYamlLocation(configChangeSetBranchName)))
-                    .append(ls);
-        } else {
-            logger.warn(StringUtil.concatStrings(
-                    TestGridConstants.TESTGRID_YAML, " is missing in ", deployRepositoryLocation));
-        }
-        testgridYamlContent = testgridYamlBuilder.toString().trim();
-        if (testgridYamlContent.isEmpty() || !testgridYamlContent.contains("scenarioConfig")) {
-            testgridYamlContent = getTestgridYamlFor(Paths.get(testgridYamlLocation)).trim();
-        }
-
+        String testgridYamlContent = getTestgridYamlFor(Paths.get(testgridYamlLocation)).trim();
         if (testgridYamlContent.isEmpty()) {
             if (logger.isDebugEnabled()) {
                 logger.debug("job-config.yaml content: " + jobConfigFile.toString());
@@ -345,28 +309,12 @@ public class GenerateTestPlanCommand implements Command {
         representer.getPropertyUtils().setSkipMissingProperties(true); // Skip missing properties in testgrid.yaml
         TestgridYaml testgridYaml = new Yaml(new Constructor(TestgridYaml.class), representer)
                 .loadAs(testgridYamlContent, TestgridYaml.class);
-        insertJobConfigFilePropertiesTo(testgridYaml, jobConfigFile);
+        //insertJobConfigFilePropertiesTo(testgridYaml, jobConfigFile);
 
         if (logger.isDebugEnabled()) {
             logger.debug("The testgrid.yaml content for this product build: " + testgridYamlContent);
         }
         return testgridYaml;
-    }
-
-    /**
-     * Reads the @{@link JobConfigFile} and add its content into {@link TestgridYaml}.
-     *
-     * @param testgridYaml testgridYaml
-     * @param jobConfigFile jobConfigFile
-     */
-    private void insertJobConfigFilePropertiesTo(TestgridYaml testgridYaml, JobConfigFile jobConfigFile) {
-        testgridYaml.setJobName(jobConfigFile.getJobName());
-        testgridYaml.setInfrastructureRepository(jobConfigFile.getInfrastructureRepository());
-        testgridYaml.setDeploymentRepository(jobConfigFile.getDeploymentRepository());
-        testgridYaml.setScenarioTestsRepository(jobConfigFile.getScenarioTestsRepository());
-        testgridYaml.setJobProperties(jobConfigFile.getProperties());
-        testgridYaml.setConfigChangeSetRepository(jobConfigFile.getConfigChangeSetRepository());
-        testgridYaml.setConfigChangeSetBranchName(jobConfigFile.getConfigChangeSetBranchName());
     }
 
     /**
@@ -615,22 +563,6 @@ public class GenerateTestPlanCommand implements Command {
             } else {
                 return super.representJavaBeanProperty(javaBean, property, propertyValue, customTag);
             }
-        }
-    }
-
-    /**
-     * If the testgrid yaml file is hidden in the directory, change the URI as to refer the hidden file.
-     * @param directory directory where the testgrid yaml file exists
-     * @return testgrid yaml file path
-     */
-    private Path getTestGridYamlLocation(String directory) {
-        Path hiddenYamlPath = Paths.get(
-                directory, TestGridConstants.HIDDEN_FILE_INDICATOR + TestGridConstants.TESTGRID_YAML);
-        Path defaultYamlPath = Paths.get(directory, TestGridConstants.TESTGRID_YAML);
-        if (Files.exists(hiddenYamlPath)) {
-            return hiddenYamlPath;
-        } else {
-            return defaultYamlPath;
         }
     }
 

@@ -33,11 +33,6 @@ import java.util.Properties;
 public class JobConfigFile {
 
     private String jobName;
-    private String infrastructureRepository;
-    private String deploymentRepository;
-    private String scenarioTestsRepository;
-    private String configChangeSetRepository;
-    private String configChangeSetBranchName;
     private String keyFileLocation;
     private Properties properties;
 
@@ -57,75 +52,6 @@ public class JobConfigFile {
      * @see #getTestgridYamlLocation()
      */
     private String testgridYamlLocation;
-
-    // aliases of scenarioTestsRepository
-    private String scenariosTestRepository;
-    private String scenarioTestRepository;
-
-    public String getInfrastructureRepository() {
-        return infrastructureRepository;
-    }
-
-    public void setInfrastructureRepository(String infrastructureRepository) {
-        this.infrastructureRepository = infrastructureRepository;
-    }
-
-    public String getDeploymentRepository() {
-        return deploymentRepository;
-    }
-
-    public void setDeploymentRepository(String deploymentRepository) {
-        this.deploymentRepository = deploymentRepository;
-    }
-
-    public String getScenarioTestsRepository() {
-        return !StringUtil.isStringNullOrEmpty(scenarioTestsRepository) ? scenarioTestsRepository :
-                !StringUtil.isStringNullOrEmpty(scenariosTestRepository) ? scenariosTestRepository :
-                        !StringUtil.isStringNullOrEmpty(scenarioTestRepository) ? scenarioTestRepository : null;
-
-    }
-
-    public void setScenarioTestsRepository(String scenarioTestsRepository) {
-        this.scenarioTestsRepository = scenarioTestsRepository;
-        this.scenariosTestRepository = scenarioTestsRepository;
-        this.scenarioTestRepository = scenarioTestsRepository;
-    }
-
-    /**
-     * Get config change set repository
-     *
-     * @return the config change set repository
-     */
-    public String getConfigChangeSetRepository() {
-        return this.configChangeSetRepository;
-    }
-
-    /**
-     * Set config change set repository
-     *
-     * @param configChangeSetRepository the config chage set repository
-     */
-    public void setConfigChangeSetRepository(String configChangeSetRepository) {
-        this.configChangeSetRepository = configChangeSetRepository;
-    }
-
-    /**
-     * Get config change set repository branch name
-     *
-     * @return
-     */
-    public String getConfigChangeSetBranchName() {
-        return configChangeSetBranchName;
-    }
-
-    /**
-     * Set config change set repository branch name
-     *
-     * @param configChangeSetBranchName
-     */
-    public void setConfigChangeSetBranchName(String configChangeSetBranchName) {
-        this.configChangeSetBranchName = configChangeSetBranchName;
-    }
 
     /**
      * The recommended way to load the testgrid.yaml config is via the testgrid.yaml
@@ -221,9 +147,6 @@ public class JobConfigFile {
     @Override
     public String toString() {
         return "JobConfigFile{" +
-                "infrastructureRepository='" + infrastructureRepository + '\'' +
-                ", deploymentRepository='" + deploymentRepository + '\'' +
-                ", scenarioTestsRepository='" + scenarioTestsRepository + '\'' +
                 ", isRelativePaths=" + isRelativePaths +
                 ", testgridYamlLocation='" + testgridYamlLocation + '\'' +
                 ", testgridKeyFileLocation='" + keyFileLocation + '\'' +

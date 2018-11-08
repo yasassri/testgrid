@@ -76,6 +76,8 @@ public class DeploymentConfig implements Serializable {
         private String name;
         private String description;
         private String dir;
+        private String repository;
+        private String resourceLocation;
         private List<Script> scripts;
 
         public String getName() {
@@ -114,6 +116,22 @@ public class DeploymentConfig implements Serializable {
 
         public void setScripts(List<Script> scripts) {
             this.scripts = scripts;
+        }
+
+        public String getRepository() {
+            return repository;
+        }
+
+        public void setRepository(String repository) {
+            this.repository = repository;
+        }
+
+        public String getResourceLocation() {
+            return resourceLocation;
+        }
+
+        public void setResourceLocation(String resourceLocation) {
+            this.resourceLocation = resourceLocation;
         }
 
         @Override

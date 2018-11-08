@@ -9,6 +9,8 @@ infrastructureConfig:
   provisioners:
     - name: 01-dummy-deployment
       description: Provision Infra for a dummy deployment
+      repository: "-b minimum-HA https://github.com/vimukthiperera/aws-ei.git"
+      resourceLocation: "workspace/infrastructure"
       dir: .
       scripts:
         - name: infra-for-dummy-deployment

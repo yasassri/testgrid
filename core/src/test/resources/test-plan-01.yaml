@@ -11,7 +11,6 @@ deploymentConfig:
       name: deploy-
       phase: CREATE
       type: SHELL
-deploymentRepository: workspace/deployment
 id: abc
 infrastructureConfig:
   containerOrchestrationEngine: None
@@ -35,10 +34,6 @@ infrastructureConfig:
       name: destroy-
       phase: DESTROY
       type: SHELL
-infrastructureRepository: workspace/infrastructure
-jobProperties:
-  PROPERTY1: value1
-keyFileLocation: workspace/testkey.pem
 scenarioConfig:
   scenarios:
   - description: Test Scenario
@@ -48,7 +43,6 @@ scenarioConfig:
     testCases: [
       ]
   testType: FUNCTIONAL
-scenarioTestsRepository: workspace/scenarioTests
 testRunNumber: 1
 testScenarios: [
   ]
